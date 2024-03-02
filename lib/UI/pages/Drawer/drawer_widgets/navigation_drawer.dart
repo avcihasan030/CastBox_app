@@ -1,17 +1,47 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:final_year_project/DATA/Auth/auth_service.dart';
-import 'package:final_year_project/DATA/State_Management/widget_providers/user_provider.dart';
+import 'package:final_year_project/DATA/Profile/user_profile_service.dart';
 import 'package:final_year_project/UI/utils/text_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NavigationDrawerWidget extends ConsumerWidget {
+class NavigationDrawerWidget extends ConsumerStatefulWidget {
   const NavigationDrawerWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
+  ConsumerState createState() => _NavigationDrawerWidgetState();
+}
 
+class _NavigationDrawerWidgetState
+    extends ConsumerState<NavigationDrawerWidget> {
+  dynamic profileImage;
+  String? name = '';
+
+  final UserProfileService _userProfileService = UserProfileService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserEmailAndImage();
+  }
+
+  Future<void> _fetchUserEmailAndImage() async {
+    final userData = await _userProfileService.getUserProfileData();
+    setState(() {
+      name = userData['name'] ?? '*****';
+      dynamic imageUrl = userData['imageUrl'];
+      if (imageUrl is String && imageUrl.isNotEmpty) {
+        profileImage = imageUrl;
+      } else if (imageUrl is File) {
+        profileImage = imageUrl;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Drawer(
       child: Padding(
         padding: const EdgeInsets.only(left: 16, right: 8),
@@ -24,12 +54,8 @@ class NavigationDrawerWidget extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 32),
                     child: ListTile(
-                      leading: const CircleAvatar(
-                        foregroundImage: NetworkImage(
-                            'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e7236087-24e0-41dc-9886-0cc0e6352edb/dffep1w-196d5430-cb72-40af-9d06-9aa0691551af.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2U3MjM2MDg3LTI0ZTAtNDFkYy05ODg2LTBjYzBlNjM1MmVkYlwvZGZmZXAxdy0xOTZkNTQzMC1jYjcyLTQwYWYtOWQwNi05YWEwNjkxNTUxYWYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.utF89BRgsoiA57vT33kdZknxKF21HayN7RZtyKcVzlE'),
-                        radius: 26,
-                      ),
-                      title: Text(user.name),
+                      leading: _buildProfileImage(),
+                      title: Text(name!),
                     ),
                   ),
                   ListTile(
@@ -55,14 +81,6 @@ class NavigationDrawerWidget extends ConsumerWidget {
                     },
                     hoverColor: Colors.green.shade100.withOpacity(0.5),
                   ),
-                  // ListTile(
-                  //   title: Text('Chat'),
-                  //   leading: const Icon(Icons.message_outlined),
-                  //   onTap: () {
-                  //     _navigateTo(context, 'chatting');
-                  //   },
-                  //   hoverColor: Colors.green.shade100.withOpacity(0.5),
-                  // ),
                   ListTile(
                     title: Text(
                       TextUtils.adsFreeTitle,
@@ -106,6 +124,91 @@ class NavigationDrawerWidget extends ConsumerWidget {
       ),
     );
   }
+
+  // Widget _buildProfileImage() {
+  //   if (profileImage is File) {
+  //     return Container(
+  //       width: 48,
+  //       height: 48,
+  //       child: ClipOval(
+  //         child: Image.file(profileImage, fit: BoxFit.cover),
+  //       ),
+  //     );
+  //   } else if (profileImage is String && profileImage.isNotEmpty) {
+  //     return Container(
+  //       width: 48,
+  //       height: 48,
+  //       child: ClipOval(
+  //         child: Image.network(profileImage, fit: BoxFit.cover),
+  //       ),
+  //     );
+  //   } else {
+  //     // Varsayılan profil fotoğrafı
+  //     return const Icon(Icons.account_circle, size: 48);
+  //   }
+  // }
+  Widget _buildProfileImage() {
+    if (profileImage is File) {
+      // Dosya yolu URI'ye dönüştürülüyor
+      final fileUri = profileImage!.uri;
+      // Dosya yolu geçerli mi diye kontrol ediliyor
+      if (fileUri != null) {
+        return Container(
+          width: 48,
+          height: 48,
+          child: ClipOval(
+            child: Image.file(profileImage!, fit: BoxFit.cover),
+          ),
+        );
+      } else {
+        // Dosya yolu geçersiz ise varsayılan ikon gösteriliyor
+        return const Icon(Icons.account_circle, size: 48);
+      }
+    } else if (profileImage is String && profileImage.isNotEmpty) {
+      return Container(
+        width: 48,
+        height: 48,
+        child: ClipOval(
+          child: Image.network(profileImage, fit: BoxFit.cover),
+        ),
+      );
+    } else {
+      // Varsayılan profil fotoğrafı
+      return const Icon(Icons.account_circle, size: 48);
+    }
+  }
+
+  // Widget _buildProfileImage() {
+  //   if (profileImage is File) {
+  //     // Dosya yolu URI'ye dönüştürülüyor
+  //     final fileUri = profileImage!.uri;
+  //     // Dosya yolu geçerli mi diye kontrol ediliyor
+  //     if (fileUri != null) {
+  //       return Container(
+  //         width: 48,
+  //         height: 48,
+  //         child: ClipOval(
+  //           child: Image.file(profileImage!, fit: BoxFit.cover),
+  //         ),
+  //       );
+  //     } else {
+  //       // Dosya yolu geçersiz ise varsayılan ikon gösteriliyor
+  //       return const Icon(Icons.account_circle, size: 48);
+  //     }
+  //   } else if (profileImage is String && profileImage.isNotEmpty) {
+  //     return Container(
+  //       width: 48,
+  //       height: 48,
+  //       child: ClipOval(
+  //         child: Image.asset(profileImage, fit: BoxFit.cover),
+  //       ),
+  //     );
+  //   } else {
+  //     // Varsayılan profil fotoğrafı
+  //     return const Icon(Icons.account_circle, size: 48);
+  //   }
+  // }
+
 
   void _navigateTo(BuildContext context, String route) {
     //Navigator.pop(context);

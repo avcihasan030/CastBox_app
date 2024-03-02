@@ -1,54 +1,63 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:final_year_project/DATA/Auth/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
+import 'package:final_year_project/DATA/Profile/user_profile_service.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // Kullanıcının bilgileri
-  String profilePhoto =
-      'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e7236087-24e0-41dc-9886-0cc0e6352edb/dffep1w-196d5430-cb72-40af-9d06-9aa0691551af.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2U3MjM2MDg3LTI0ZTAtNDFkYy05ODg2LTBjYzBlNjM1MmVkYlwvZGZmZXAxdy0xOTZkNTQzMC1jYjcyLTQwYWYtOWQwNi05YWEwNjkxNTUxYWYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.utF89BRgsoiA57vT33kdZknxKF21HayN7RZtyKcVzlE';
-  String ad = "John Doe";
-  String email = "";
-  String ulke = "USA";
-  int? yas;
-  String? cinsiyet;
+  final UserProfileService _profileService = UserProfileService();
+  late Map<String, dynamic> _userData = {};
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final ImagePicker _imagePicker = ImagePicker();
+  dynamic _imageFile;
 
-  // Bilgileri güncellemek için controller'lar
-  TextEditingController adController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController ulkeController = TextEditingController();
-  TextEditingController yasController = TextEditingController();
-  TextEditingController cinsiyetController = TextEditingController();
-
-  final AuthService _authService = AuthService();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<void> fetchUserEmail() async {
-    User? user = _authService.getCurrentUser();
-
-    if (user != null) {
-      DocumentSnapshot userDoc =
-          await _firestore.collection('Users').doc(user.uid).get();
-
-      if (userDoc.exists) {
-        setState(() {
-          email = userDoc['email'];
-        });
-      }
-    }
-  }
+  AssetImage defaultProfilePhotoUrl =
+      const AssetImage('images/profile_avatar.png');
 
   @override
   void initState() {
     super.initState();
-    fetchUserEmail();
+    _fetchUserProfile();
+  }
+
+  Future<void> _fetchUserProfile() async {
+    final userData = await _profileService.getUserProfileData();
+    setState(() {
+      _userData = userData;
+      _nameController.text = userData['name'] ?? '';
+      _countryController.text = userData['country'] ?? '';
+      _ageController.text = userData['age']?.toString() ?? '';
+      _genderController.text = userData['gender'] ?? '';
+      dynamic imageUrl = userData['imageUrl'];
+      if (imageUrl is String && imageUrl.isNotEmpty) {
+        _imageFile = imageUrl;
+      } else if (imageUrl is File) {
+        _imageFile = imageUrl;
+      }
+    });
+  }
+
+  Future<void> _updateUserProfile() async {
+    await _profileService.updateUserProfile({
+      'name': _nameController.text.trim(),
+      'country': _countryController.text.trim(),
+      'age': int.tryParse(_ageController.text.trim()) ?? 0,
+      'gender': _genderController.text.trim(),
+      //'imageUrl': _imageFile ?? defaultProfilePhotoUrl,
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Profil güncellendi')),
+    );
   }
 
   @override
@@ -63,94 +72,47 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Profil Fotoğrafı
-              // const Align(
-              //   alignment: Alignment.center,
-              //   child: CircleAvatar(
-              //     radius: 54,
-              //     foregroundImage: NetworkImage(
-              //         'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e7236087-24e0-41dc-9886-0cc0e6352edb/dffep1w-196d5430-cb72-40af-9d06-9aa0691551af.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2U3MjM2MDg3LTI0ZTAtNDFkYy05ODg2LTBjYzBlNjM1MmVkYlwvZGZmZXAxdy0xOTZkNTQzMC1jYjcyLTQwYWYtOWQwNi05YWEwNjkxNTUxYWYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.utF89BRgsoiA57vT33kdZknxKF21HayN7RZtyKcVzlE'),
-              //   ),
-              // ),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     GestureDetector(
-              //       onTap: () {
-              //         Navigator.push(
-              //           context,
-              //           MaterialPageRoute(
-              //             builder: (context) => PhotoViewScreen(
-              //               imageUrl:
-              //               'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e7236087-24e0-41dc-9886-0cc0e6352edb/dffep1w-196d5430-cb72-40af-9d06-9aa0691551af.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2U3MjM2MDg3LTI0ZTAtNDFkYy05ODg2LTBjYzBlNjM1MmVkYlwvZGZmZXAxdy0xOTZkNTQzMC1jYjcyLTQwYWYtOWQwNi05YWEwNjkxNTUxYWYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.utF89BRgsoiA57vT33kdZknxKF21HayN7RZtyKcVzlE',
-              //               heroTag: 'profile_photo',
-              //             ),
-              //           ),
-              //         );
-              //       },
-              //       child: Hero(
-              //         tag: 'profile_photo',
-              //         child: CircleAvatar(
-              //           radius: 54,
-              //           foregroundImage: NetworkImage(
-              //               'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e7236087-24e0-41dc-9886-0cc0e6352edb/dffep1w-196d5430-cb72-40af-9d06-9aa0691551af.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2U3MjM2MDg3LTI0ZTAtNDFkYy05ODg2LTBjYzBlNjM1MmVkYlwvZGZmZXAxdy0xOTZkNTQzMC1jYjcyLTQwYWYtOWQwNi05YWEwNjkxNTUxYWYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.utF89BRgsoiA57vT33kdZknxKF21HayN7RZtyKcVzlE'),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
               Align(
                 alignment: Alignment.center,
                 child: GestureDetector(
                   onTap: () {
                     // Profil fotoğrafına tıklandığında büyük bir fotoğrafı göster
-                    showProfilePhotoDialog(profilePhoto);
+                    if (_imageFile != null) {
+                      showProfilePhotoDialog(_imageFile);
+                    }
                   },
-                  child: Hero(
-                    tag: 'profilePhoto',
-                    child: CircleAvatar(
-                      radius: 54,
-                      foregroundImage: NetworkImage(profilePhoto),
-                    ),
-                  ),
+                  onLongPress: () {
+                    changeProfilePhotoDialog();
+                  },
+                  child: _displayProfilePhoto(_imageFile),
                 ),
               ),
               const SizedBox(height: 16),
-
               // Ad Bilgisi
-              buildInfoTile(
-                'Ad',
-                ad,
-                adController,
-              ),
+              buildInfoTile('Ad', _userData['name'] ?? '', _nameController),
 
-              // Email Bilgisi
-              buildInfoTile(
-                'Email',
-                email.isNotEmpty ? email : "john.doe@example.com",
-                emailController,
-              ),
+              // Email bilgisi
+              buildInfoTile('Email', _userData['email'] ?? '', null),
 
               // Ülke Bilgisi
               buildInfoTile(
-                'Ülke',
-                ulke,
-                ulkeController,
-              ),
+                  'Ülke', _userData['country'] ?? '', _countryController),
 
               // Yaş Bilgisi
               buildInfoTile(
-                'Yaş',
-                yas?.toString() ?? 'Belirtilmemiş',
-                yasController,
-              ),
+                  'Yaş', _userData['age']?.toString() ?? '', _ageController),
 
               // Cinsiyet Bilgisi
               buildInfoTile(
-                'Cinsiyet',
-                cinsiyet ?? 'Belirtilmemiş',
-                cinsiyetController,
+                  'Cinsiyet', _userData['gender'] ?? '', _genderController),
+
+              const SizedBox(height: 16),
+
+              Center(
+                child: ElevatedButton(
+                  onPressed: _updateUserProfile,
+                  child: const Text("Profil Bilgilerini Güncelle"),
+                ),
               ),
             ],
           ),
@@ -160,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget buildInfoTile(
-      String label, String value, TextEditingController controller) {
+      String label, String value, TextEditingController? controller) {
     return ListTile(
       leading: const CircleAvatar(
         radius: 24, // Adjust the size as needed
@@ -168,12 +130,14 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       title: Text(label),
       subtitle: Text(value),
-      trailing: IconButton(
-        icon: const Icon(Icons.edit),
-        onPressed: () {
-          showEditDialog(label, controller);
-        },
-      ),
+      trailing: controller != null
+          ? IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                showEditDialog(label, controller);
+              },
+            )
+          : null,
     );
   }
 
@@ -199,13 +163,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 setState(() {
                   // Kullanıcının girdiği yeni bilgiyi güncelle
                   if (label == 'Ad') {
-                    ad = controller.text;
+                    _userData['name'] = controller.text;
                   } else if (label == 'Ülke') {
-                    ulke = controller.text;
+                    _userData['country'] = controller.text;
                   } else if (label == 'Yaş') {
-                    yas = int.tryParse(controller.text)!;
+                    _userData['age'] = int.tryParse(controller.text) ?? 0;
                   } else if (label == 'Cinsiyet') {
-                    cinsiyet = controller.text;
+                    _userData['gender'] = controller.text;
                   }
 
                   Navigator.pop(context);
@@ -219,24 +183,162 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void showProfilePhotoDialog(String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          child: SizedBox(
-            width: 300,
-            height: 300,
-            child: Hero(
-              tag: 'profilePhoto',
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
+  // void showProfilePhotoDialog(dynamic imageFile) {
+  //   if (imageFile is File) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return Dialog(
+  //           child: SizedBox(
+  //             width: 300,
+  //             height: 300,
+  //             child: Hero(
+  //               tag: 'profilePhoto',
+  //               child: Image.file(
+  //                 imageFile,
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     );
+  //   } else if (imageFile is String && imageFile.isNotEmpty) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return Dialog(
+  //           child: SizedBox(
+  //             width: 300,
+  //             height: 300,
+  //             child: Hero(
+  //               tag: 'profilePhoto',
+  //               child: Image.asset(
+  //                 imageFile,
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+  void showProfilePhotoDialog(dynamic imageFile) {
+    if (imageFile is File) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: SizedBox(
+              width: 300,
+              height: 300,
+              child: Hero(
+                tag: 'profilePhoto',
+                child: Image.file(
+                  imageFile,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      );
+    } else if (imageFile is String && imageFile.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: SizedBox(
+              width: 300,
+              height: 300,
+              child: Hero(
+                tag: 'profilePhoto',
+                child: Image.network(
+                  imageFile,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+
+  void changeProfilePhotoDialog() async {
+    final XFile? pickedFile = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
     );
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      setState(() {
+        _imageFile = imageFile;
+        uploadImage();
+      });
+    }
+  }
+
+  Future<void> uploadImage() async {
+    if (_imageFile != null) {
+      await _profileService.uploadAndUpdateFirestore(_imageFile);
+    } else {
+      debugPrint("Lütfen bir resim seçin");
+    }
+  }
+
+  // Widget _displayProfilePhoto(dynamic imageFile) {
+  //   if (imageFile is File) {
+  //     return Hero(
+  //         tag: 'profilePhoto',
+  //         child: CircleAvatar(
+  //           radius: 54,
+  //           backgroundImage: FileImage(imageFile),
+  //         ));
+  //   } else if (imageFile is String && imageFile.isNotEmpty) {
+  //     return Hero(
+  //       tag: 'profilePhoto',
+  //       child: CircleAvatar(
+  //         radius: 54,
+  //         backgroundImage: AssetImage(imageFile),
+  //       ),
+  //     );
+  //   } else {
+  //     return Hero(
+  //       tag: 'profilePhoto',
+  //       child: CircleAvatar(
+  //         radius: 54,
+  //         backgroundImage: defaultProfilePhotoUrl,
+  //       ),
+  //     );
+  //   }
+  // }
+  Widget _displayProfilePhoto(dynamic imageFile) {
+    if (imageFile is File) {
+      return Hero(
+          tag: 'profilePhoto',
+          child: CircleAvatar(
+            radius: 54,
+            backgroundImage: FileImage(imageFile),
+          ));
+    } else if (imageFile is String && imageFile.isNotEmpty) {
+      return Hero(
+        tag: 'profilePhoto',
+        child: CircleAvatar(
+          radius: 54,
+          backgroundImage: NetworkImage(imageFile),
+        ),
+      );
+    } else {
+      return Hero(
+        tag: 'profilePhoto',
+        child: CircleAvatar(
+          radius: 54,
+          backgroundImage: defaultProfilePhotoUrl,
+        ),
+      );
+    }
   }
 }

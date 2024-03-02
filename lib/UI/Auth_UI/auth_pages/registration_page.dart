@@ -103,6 +103,7 @@ class _LoginPageState extends ConsumerState<RegistrationPage> {
                   /// password textfield
                   TextFormField(
                     controller: _passwordController,
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(
                         borderSide: BorderSide(width: 2),
@@ -126,7 +127,6 @@ class _LoginPageState extends ConsumerState<RegistrationPage> {
                       labelText: 'password',
                       //icon: Icon(Icons.password_outlined),
                     ),
-                    textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: isVisible,
                     validator: (value) {
@@ -166,7 +166,7 @@ class _LoginPageState extends ConsumerState<RegistrationPage> {
                       labelText: 'confirm password',
                       //icon: Icon(Icons.password_outlined),
                     ),
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: isVisible,
                     validator: (value) {

@@ -15,7 +15,6 @@ class HomePage extends ConsumerWidget {
     context.locale;
     final selectedTabIndex = ref.watch(selectedTabIndexProvider.notifier).state;
     final pages = ref.watch(pagesProvider);
-    ThemeData themeData = Theme.of(context);
     return DefaultTabController(
       initialIndex: selectedTabIndex,
       length: pages.length,

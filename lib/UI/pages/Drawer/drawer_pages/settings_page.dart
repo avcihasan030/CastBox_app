@@ -52,7 +52,7 @@ class SettingsPage extends ConsumerWidget {
       case 'Profile':
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ProfilePage(),
+            builder: (context) => const ProfilePage(),
           ),
         );
         break;
@@ -60,7 +60,7 @@ class SettingsPage extends ConsumerWidget {
         // Dil ayarları sayfasını açmak için yönlendirme yapabilirsiniz.
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => Appearance(),
+            builder: (context) => const Appearance(),
           ),
         );
         break;

@@ -1,13 +1,14 @@
-
-
 import 'package:dio/dio.dart';
+import 'package:final_year_project/DATA/API/Database_Services/firestore_service.dart';
 import 'package:final_year_project/DATA/Models/api_models/artist_model.dart';
 import 'package:final_year_project/DATA/Models/api_models/category_model.dart';
 import 'package:final_year_project/DATA/Models/api_models/playlist_model.dart';
+import 'package:final_year_project/DATA/State_Management/database_providers/database_providers.dart';
 
 class SpotifyApiService {
   final String token;
   final Dio _dio = Dio();
+  final FirestoreService firestoreService = FirestoreService();
 
   SpotifyApiService({required this.token});
 
@@ -117,6 +118,31 @@ class SpotifyApiService {
       return artists;
     } catch (error) {
       throw Exception("Failed to fetch artists: $error");
+    }
+  }
+
+  /// kategorileri firestore'a ekleme yapan geçici method
+  Future<void> addCategoriesToFirestore() async {
+    try {
+      List<Category> categories = await getCategories();
+
+      for (Category category in categories) {
+        await firestoreService.addCategory(category.id, category.name);
+      }
+    } catch (e) {
+      throw Exception("Kategorieleri Firestore'a eklerken hata oluştu: $e");
+    }
+  }
+
+  Future<void> addCategoryPlaylistsToFirestore(String categoryId) async {
+    try {
+      List<PlaylistItem> playlists = await getCategoryPlaylists(categoryId);
+
+      for (PlaylistItem playlist in playlists) {
+        await firestoreService.addPlaylistToCategory(categoryId, playlist.id);
+      }
+    } catch (e) {
+      throw Exception("Playlistleri Firestore'a eklerken hata oluştu: $e");
     }
   }
 }
