@@ -8,22 +8,23 @@ class FirestoreService {
   final CollectionReference playlistCollection =
       FirebaseFirestore.instance.collection('playlists');
 
-  Future<void> addCategory(String id, String name) async {
-    try {
-      await categoriesCollection.doc(id).set({'id': id, 'name': name});
-    } catch (e) {
-      throw Exception("Failed to add category: $e");
-    }
-  }
-
-  Future<void> addPlaylistToCategory(
-      String categoryId, String playlistId) async {
-    try {
-      await playlistCollection.doc(playlistId).set({'categoryId': categoryId});
-    } catch (e) {
-      throw Exception("Failed to add playlist to category: $e");
-    }
-  }
+  // Future<void> addCategory(String id, String name) async {
+  //   try {
+  //     await categoriesCollection.doc(id).set({'id': id, 'name': name});
+  //   } catch (e) {
+  //     throw Exception("Failed to add category: $e");
+  //   }
+  // }
+  //
+  // Future<void> addPlaylistToCategory(String categoryId, String playlistId,
+  //     String name, String description) async {
+  //   try {
+  //     await playlistCollection.doc(playlistId).set(
+  //         {'id':playlistId,'categoryId': categoryId, 'name': name, 'description': description});
+  //   } catch (e) {
+  //     throw Exception("Failed to add playlist to category: $e");
+  //   }
+  // }
 
   Future<List<Category>> getCategories() async {
     try {

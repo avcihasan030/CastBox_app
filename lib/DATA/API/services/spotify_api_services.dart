@@ -121,28 +121,28 @@ class SpotifyApiService {
     }
   }
 
-  /// kategorileri firestore'a ekleme yapan geçici method
-  Future<void> addCategoriesToFirestore() async {
-    try {
-      List<Category> categories = await getCategories();
+  // /// kategorileri firestore'a ekleme yapan geçici method
+  // Future<void> addCategoriesToFirestore() async {
+  //   try {
+  //     List<Category> categories = await getCategories();
+  //
+  //     for (Category category in categories) {
+  //       await firestoreService.addCategory(category.id, category.name);
+  //     }
+  //   } catch (e) {
+  //     throw Exception("Kategorieleri Firestore'a eklerken hata oluştu: $e");
+  //   }
+  // }
 
-      for (Category category in categories) {
-        await firestoreService.addCategory(category.id, category.name);
-      }
-    } catch (e) {
-      throw Exception("Kategorieleri Firestore'a eklerken hata oluştu: $e");
-    }
-  }
-
-  Future<void> addCategoryPlaylistsToFirestore(String categoryId) async {
-    try {
-      List<PlaylistItem> playlists = await getCategoryPlaylists(categoryId);
-
-      for (PlaylistItem playlist in playlists) {
-        await firestoreService.addPlaylistToCategory(categoryId, playlist.id);
-      }
-    } catch (e) {
-      throw Exception("Playlistleri Firestore'a eklerken hata oluştu: $e");
-    }
-  }
+  // Future<void> addCategoryPlaylistsToFirestore(String categoryId) async {
+  //   try {
+  //     List<PlaylistItem> playlists = await getCategoryPlaylists(categoryId);
+  //
+  //     for (PlaylistItem playlist in playlists) {
+  //       await firestoreService.addPlaylistToCategory(categoryId, playlist.id,playlist.name,playlist.description);
+  //     }
+  //   } catch (e) {
+  //     throw Exception("Playlistleri Firestore'a eklerken hata oluştu: $e");
+  //   }
+  // }
 }

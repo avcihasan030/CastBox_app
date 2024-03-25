@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:final_year_project/DATA/Auth/auth_service.dart';
+import 'package:final_year_project/DATA/Dataset/firestore_to_csv.dart';
 import 'package:final_year_project/DATA/Profile/user_profile_service.dart';
 import 'package:final_year_project/UI/utils/text_utils.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +117,15 @@ class _NavigationDrawerWidgetState
                     onTap: () => signOut(context),
                     hoverColor: Colors.green.shade100.withOpacity(0.5),
                   ),
+                  TextButton(
+                      onPressed: () {
+                        try {
+                          exportFirestoreDataToCsv();
+                        } catch (e) {
+                          throw Exception("Failed to generate csv file: $e");
+                        }
+                      },
+                      child: const Text("Generate CSV File")),
                 ],
               ),
             ),
@@ -208,7 +218,6 @@ class _NavigationDrawerWidgetState
   //     return const Icon(Icons.account_circle, size: 48);
   //   }
   // }
-
 
   void _navigateTo(BuildContext context, String route) {
     //Navigator.pop(context);

@@ -36,7 +36,7 @@ final categoriesProvider =
     FutureProvider.autoDispose<List<Category>>((ref) async {
   final service = ref.read(spotifyApiServiceProvider);
   final categories = await service.getCategories();
-  service.addCategoriesToFirestore();
+  //service.addCategoriesToFirestore();
   return categories;
 });
 
@@ -44,7 +44,7 @@ final categoryPlaylistsProvider = FutureProvider.autoDispose
     .family<List<PlaylistItem>, String>((ref, categoryId) async {
   final service = ref.read(spotifyApiServiceProvider);
   final playlists = await service.getCategoryPlaylists(categoryId);
-  service.addCategoryPlaylistsToFirestore(categoryId);
+  //service.addCategoryPlaylistsToFirestore(categoryId);
   return playlists;
 });
 

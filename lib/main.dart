@@ -45,8 +45,10 @@ class MyApp extends ConsumerWidget {
           themeMode: currentMode,
           debugShowCheckedModeBanner: false,
           title: 'CASTBOX',
-          home: const SplashScreen(),
+          //home: const SplashScreen(),
+          initialRoute: 'splash',
           routes: {
+            'splash':(context) => const SplashScreen(),
             '': (context) => const HomePage(),
             'subscribed': (context) => const FavoritesPage(),
             //'history': (context) => const HistoryPage(),

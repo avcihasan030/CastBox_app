@@ -1,4 +1,3 @@
-
 import 'package:final_year_project/DATA/Models/settings_model.dart';
 import 'package:final_year_project/UI/utils/text_utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
