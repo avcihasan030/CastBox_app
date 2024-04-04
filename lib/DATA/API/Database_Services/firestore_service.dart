@@ -1,59 +1,83 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:final_year_project/DATA/Models/database_models/database_playlist.dart';
-import '../../Models/database_models/database_category.dart';
+import 'package:final_year_project/DATA/Models/database_models/database_tracks.dart';
 
 class FirestoreService {
-  final CollectionReference categoriesCollection =
-      FirebaseFirestore.instance.collection('categories');
-  final CollectionReference playlistCollection =
-      FirebaseFirestore.instance.collection('playlists');
+  final CollectionReference tracksCollection =
+      FirebaseFirestore.instance.collection('tracks');
 
-  // Future<void> addCategory(String id, String name) async {
-  //   try {
-  //     await categoriesCollection.doc(id).set({'id': id, 'name': name});
-  //   } catch (e) {
-  //     throw Exception("Failed to add category: $e");
-  //   }
-  // }
-  //
-  // Future<void> addPlaylistToCategory(String categoryId, String playlistId,
-  //     String name, String description) async {
-  //   try {
-  //     await playlistCollection.doc(playlistId).set(
-  //         {'id':playlistId,'categoryId': categoryId, 'name': name, 'description': description});
-  //   } catch (e) {
-  //     throw Exception("Failed to add playlist to category: $e");
-  //   }
-  // }
-
-  Future<List<Category>> getCategories() async {
+  Future<List<Tracks>> getTracks() async {
     try {
-      final response = await categoriesCollection.get();
-      final List<Category> categories = response.docs.map((doc) {
+      final response = await tracksCollection.get();
+      final List<Tracks> tracks = response.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return Category(id: data['id'], name: data['name']);
+        String artists = data['artists'] ?? '';
+        return Tracks(
+          id: data['id'] ?? '',
+          name: data['name'] ?? '',
+          popularity: data['popularity'] ?? '',
+          artists: artists,
+          releaseDate: data['releaseDate'] ?? '',
+        );
       }).toList();
-      return categories;
+      return tracks;
     } catch (e) {
-      throw Exception("Failed to fetch categories: $e");
-    }
-  }
-
-  Future<List<Playlist>> getCategoryPlaylists(String categoryId) async {
-    try {
-      final response = await playlistCollection
-          .where('categoryId', isEqualTo: categoryId)
-          .get();
-      final List<Playlist> playlists = response.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return Playlist(
-            id: data['id'],
-            name: data['name'],
-            description: data['description']);
-      }).toList();
-      return playlists;
-    } catch (e) {
-      throw Exception("Failed to fetch category playlists: $e");
+      throw Exception("Failed to fetch tracks: $e");
     }
   }
 }
+
+// class FirestoreService {
+//   final CollectionReference categoriesCollection =
+//       FirebaseFirestore.instance.collection('categories');
+//   final CollectionReference playlistCollection =
+//       FirebaseFirestore.instance.collection('playlists');
+
+// Future<void> addCategory(String id, String name) async {
+//   try {
+//     await categoriesCollection.doc(id).set({'id': id, 'name': name});
+//   } catch (e) {
+//     throw Exception("Failed to add category: $e");
+//   }
+// }
+//
+// Future<void> addPlaylistToCategory(String categoryId, String playlistId,
+//     String name, String description) async {
+//   try {
+//     await playlistCollection.doc(playlistId).set(
+//         {'id':playlistId,'categoryId': categoryId, 'name': name, 'description': description});
+//   } catch (e) {
+//     throw Exception("Failed to add playlist to category: $e");
+//   }
+// }
+
+// Future<List<Category>> getCategories() async {
+//   try {
+//     final response = await categoriesCollection.get();
+//     final List<Category> categories = response.docs.map((doc) {
+//       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+//       return Category(id: data['id'], name: data['name']);
+//     }).toList();
+//     return categories;
+//   } catch (e) {
+//     throw Exception("Failed to fetch categories: $e");
+//   }
+// }
+
+//   Future<List<Playlist>> getCategoryPlaylists(String categoryId) async {
+//     try {
+//       final response = await playlistCollection
+//           .where('categoryId', isEqualTo: categoryId)
+//           .get();
+//       final List<Playlist> playlists = response.docs.map((doc) {
+//         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+//         return Playlist(
+//             id: data['id'],
+//             name: data['name'],
+//             description: data['description']);
+//       }).toList();
+//       return playlists;
+//     } catch (e) {
+//       throw Exception("Failed to fetch category playlists: $e");
+//     }
+//   }
+// }

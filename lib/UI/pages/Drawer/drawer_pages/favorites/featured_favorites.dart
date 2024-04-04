@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:final_year_project/DATA/State_Management/api_providers/spotify_api_provider.dart';
+import 'package:final_year_project/DATA/State_Management/database_providers/database_providers.dart';
 import 'package:final_year_project/DATA/State_Management/widget_providers/favorites_provider.dart';
-import 'package:final_year_project/UI/pages/Playlists/playlist_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +9,7 @@ class FeaturedFavorites extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favorites = ref.watch(favoritesProvider);
-    final playlists = ref.watch(featuredPlaylistProvider);
+    final playlists = ref.watch(dbTracksProvider);
 
     return Scaffold(
       body: favorites.isEmpty
@@ -37,8 +35,9 @@ class FeaturedFavorites extends ConsumerWidget {
                           child: Column(
                             children: [
                               SizedBox(
-                                child: CachedNetworkImage(
-                                  imageUrl: playlist.images.first.url,
+                                child: Image.asset(
+                                  //imageUrl: playlist.images.first.url,
+                                  'images/coverimage.jpeg',
                                   fit: BoxFit.fill,
                                   width: 150,
                                   height: 120,
@@ -68,7 +67,8 @@ class FeaturedFavorites extends ConsumerWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        playlist.owner.displayName,
+                                        //playlist.owner.displayName,
+                                        playlist.artists!,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                             color: Colors.grey, fontSize: 11),
@@ -80,12 +80,12 @@ class FeaturedFavorites extends ConsumerWidget {
                             ],
                           ),
                           onTap: () {
-                            debugPrint("${playlist.description} clicked!");
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PlaylistDetailsPage(
-                                  playlistItem: playlist,
-                                  isFavorite: playlist.isFavorite),
-                            ));
+                            // debugPrint("${playlist.description} clicked!");
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //   builder: (context) => PlaylistDetailsPage(
+                            //       playlistItem: playlist,
+                            //       isFavorite: playlist.isFavorite),
+                            // ));
                           },
                         ),
                       ),

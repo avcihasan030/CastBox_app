@@ -1,13 +1,13 @@
-
 import 'package:final_year_project/UI/pages/Artists/artists_page.dart';
 import 'package:final_year_project/UI/pages/Categories/categories_page.dart';
 import 'package:final_year_project/UI/pages/Featured/featured_page.dart';
+import 'package:final_year_project/UI/pages/Tracks/tracks.dart';
 import 'package:final_year_project/UI/pages/Trends/trends_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final selectedTabIndexProvider = StateProvider<int>(
-      (ref) => 0,
+  (ref) => 0,
 );
 
 final pageControllerProvider = Provider<PageController>((ref) {
@@ -21,5 +21,6 @@ final pagesProvider = Provider<List<Widget>>((ref) {
     const TrendsPage(),
     const CategoriesPage(),
     const ArtistsPage(),
+    const TracksPage(),
   ];
 });

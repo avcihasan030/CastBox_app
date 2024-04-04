@@ -112,7 +112,6 @@ class DisplayUsersPage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading..");
         }
-
         //return list view
         return ListView.builder(
           itemCount: snapshot.data!.length,
@@ -132,6 +131,7 @@ class DisplayUsersPage extends StatelessWidget {
                   final String email = userData['email'];
                   final String name = userData['name'];
                   final dynamic imageUrl = userData['imageUrl'];
+                  //final String fcmToken = userData['fcmToken'];
 
                   // display all users except current user
                   if (email != _authService.getCurrentUser()!.email) {
@@ -146,6 +146,7 @@ class DisplayUsersPage extends StatelessWidget {
                             builder: (context) => ChatPage(
                               receiverEmail: email,
                               receiverID: userData['uuid'],
+                              //receiverFCMToken: fcmToken,
                             ),
                           ),
                         );

@@ -1,6 +1,6 @@
 
-import 'package:final_year_project/UI/pages/Drawer/drawer_pages/favorites/categoryFavorites.dart';
 import 'package:final_year_project/UI/pages/Drawer/drawer_pages/favorites/featured_favorites.dart';
+import 'package:final_year_project/UI/pages/Recommendations/recommendations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +20,7 @@ final favoritesPageControllerProvider = Provider<PageController>((ref) {
 final favoritePagesProvider = Provider<List<Widget>>((ref) {
   return [
     const FeaturedFavorites(),
-    const CategoryFavorites(),
+    Recommendations(),
   ];
 });
 

@@ -1,7 +1,9 @@
+import 'package:final_year_project/DATA/Ads/admob_service.dart';
 import 'package:final_year_project/DATA/Models/api_models/playlist_model.dart';
 import 'package:final_year_project/DATA/State_Management/widget_providers/favorites_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:like_button/like_button.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -23,6 +25,7 @@ class _PodcastCageState extends ConsumerState<PlaylistDetailsPage> {
   late PaletteGenerator _paletteGenerator;
   Color appBarColor = Colors.transparent;
   Color containerBackgroundColor = Colors.transparent;
+  BannerAd? _bannerAd;
 
   late AudioPlayer _audioPlayer;
   bool isPlaying = false;
@@ -32,6 +35,15 @@ class _PodcastCageState extends ConsumerState<PlaylistDetailsPage> {
   void _initializeAudioPlayer() async {
     String filePath = "assets/audios/japandailynews_2023-05-10.mp3";
     await _audioPlayer.setAsset(filePath);
+  }
+
+  void _createBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.largeBanner,
+      adUnitId: AdMobService.appIdTest,
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
   }
 
   @override
@@ -44,6 +56,7 @@ class _PodcastCageState extends ConsumerState<PlaylistDetailsPage> {
       (timeStamp) => findAppBarColor(widget.playlistItem.images.first.url),
     );
     maxPosition = _audioPlayer.duration?.inSeconds.toDouble();
+    _createBannerAd();
   }
 
   @override
@@ -134,11 +147,11 @@ class _PodcastCageState extends ConsumerState<PlaylistDetailsPage> {
                           _buildLikeButton(widget.isFavorite),
                           Expanded(
                               child: ListTile(
-                                title: Text(
-                                  widget.playlistItem.description,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )),
+                            title: Text(
+                              widget.playlistItem.description,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -214,6 +227,29 @@ class _PodcastCageState extends ConsumerState<PlaylistDetailsPage> {
                           ),
                         ],
                       ),
+                      _bannerAd == null
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 40),
+                              child: Container(
+                                height: 135,
+                                width: 180,
+                                child: const Center(
+                                  child: Text("if banner is null"),
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 40),
+                              child: Container(
+                                height: 120,
+                                width: 180,
+                                child: Center(
+                                  child: AdWidget(ad: _bannerAd!),
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 );

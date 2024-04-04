@@ -27,6 +27,7 @@ class UserTile extends StatelessWidget {
             Text(
               text,
               style: const TextStyle(color: Colors.blueGrey,fontSize: 24),
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

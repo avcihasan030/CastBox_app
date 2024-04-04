@@ -93,7 +93,6 @@
 //
 //   SignUpException(this.message);
 // }
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -102,7 +101,7 @@ import 'package:flutter/material.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String defaultProfilePhoto = 'images/profile_avatar.png';
+  final String defaultProfilePhoto = 'https://avatars.mds.yandex.net/i?id=9a8142a64b864de7a5b2b3be826ab7e9-4935648-images-thumbs&n=13';
 
   /// get current user
   User? getCurrentUser() {
@@ -146,6 +145,9 @@ class AuthService {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
+      //
+      // String? fcmToken = await FirebaseMessaging.instance.getToken();
+      // debugPrint(fcmToken);
 
       // Yeni kullanıcı bilgilerini güncelle
       await _firestore.collection('Users').doc(userCredential.user!.uid).set({
@@ -156,6 +158,7 @@ class AuthService {
         'age': null,
         'gender': 'not selected',
         'country': 'not selected',
+       // 'fcmToken': fcmToken,
       });
 
       return userCredential;
@@ -164,7 +167,6 @@ class AuthService {
       throw SignUpException("Sign Up Error: $e");
     }
   }
-
 
   // Oturumu kapat
   Future<void> signOut() async {

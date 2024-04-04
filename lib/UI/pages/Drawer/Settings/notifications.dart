@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:final_year_project/DATA/Notification/notification_service.dart';
 import 'package:flutter/material.dart';
 
 class Notifications extends StatefulWidget {
@@ -10,6 +11,7 @@ class Notifications extends StatefulWidget {
 
 class _NotificationsState extends State<Notifications> {
   bool notificationsEnabled = true;
+  //String bodyMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,9 @@ class _NotificationsState extends State<Notifications> {
                 onChanged: (value) {
                   setState(() {
                     notificationsEnabled = value;
+                    //bodyMessage = notificationsEnabled ? 'Artık Bildirim Alacaksınız':'Artık Bildirim Almayacaksınız';
                     _showNotificationMessage(value);
+                    // NotificationService.showNotification(title: 'Notification', body: bodyMessage, payload: 'Bu bir payload');
                   });
                 },
               ),

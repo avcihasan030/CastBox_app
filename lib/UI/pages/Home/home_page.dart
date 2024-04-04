@@ -35,20 +35,30 @@ class HomePage extends ConsumerWidget {
             tabs: [
               Tab(
                 child: Text(TextUtils.featuredTabTitle,
-                    style: TextUtils.getTabTitleTextStyle()).tr(),
+                        style: TextUtils.getTabTitleTextStyle())
+                    .tr(),
               ),
               Tab(
                 child: Text(TextUtils.trendingTabTitle,
-                    style: TextUtils.getTabTitleTextStyle()).tr(),
+                        style: TextUtils.getTabTitleTextStyle())
+                    .tr(),
               ),
               Tab(
                 child: Text(TextUtils.categoryTabTitle,
-                    style: TextUtils.getTabTitleTextStyle()).tr(),
+                        style: TextUtils.getTabTitleTextStyle())
+                    .tr(),
               ),
               Tab(
                 child: Text(TextUtils.networkTabTitle,
-                    style: TextUtils.getTabTitleTextStyle()).tr(),
+                        style: TextUtils.getTabTitleTextStyle())
+                    .tr(),
               ),
+              Tab(
+                child: Text(
+                  TextUtils.trackTabTitle,
+                  style: TextUtils.getTabTitleTextStyle(),
+                ).tr(),
+              )
             ],
           ),
           actions: const [

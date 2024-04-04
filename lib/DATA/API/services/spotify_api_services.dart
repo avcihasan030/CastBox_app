@@ -1,14 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:final_year_project/DATA/API/Database_Services/firestore_service.dart';
 import 'package:final_year_project/DATA/Models/api_models/artist_model.dart';
 import 'package:final_year_project/DATA/Models/api_models/category_model.dart';
 import 'package:final_year_project/DATA/Models/api_models/playlist_model.dart';
-import 'package:final_year_project/DATA/State_Management/database_providers/database_providers.dart';
 
 class SpotifyApiService {
   final String token;
   final Dio _dio = Dio();
-  final FirestoreService firestoreService = FirestoreService();
+  //final FirestoreService firestoreService = FirestoreService();
 
   SpotifyApiService({required this.token});
 

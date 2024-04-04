@@ -1,4 +1,5 @@
 import 'package:final_year_project/DATA/Auth/auth_service.dart';
+import 'package:final_year_project/DATA/Notification/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -218,6 +219,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     try {
       await _authService.signInWithEmailAndPassword(
           _emailController.text.trim(), _passwordController.text.trim());
+      await NotificationService.showNotification(
+        title: 'New Member',
+        body:
+        'Welcome aboard! Thank you for joining our app. We hope you have a great time!',
+        payload: 'This is a payload',
+      );
     } catch (e) {
       showDialog(
         context: context,

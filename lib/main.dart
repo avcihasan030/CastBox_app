@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:final_year_project/DATA/Notification/notification_service.dart';
 import 'package:final_year_project/UI/Chat_UI/user_list_page.dart';
 import 'package:final_year_project/UI/pages/Drawer/drawer_pages/ads_free_page.dart';
 import 'package:final_year_project/UI/pages/Drawer/drawer_pages/favorites/favorites_page.dart';
@@ -9,11 +10,16 @@ import 'package:final_year_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await EasyLocalization.ensureInitialized();
+  await NotificationService.initialize();
+  tz.initializeTimeZones();
+  MobileAds.instance.initialize();
   runApp(
     EasyLocalization(
       supportedLocales: const [
@@ -48,7 +54,7 @@ class MyApp extends ConsumerWidget {
           //home: const SplashScreen(),
           initialRoute: 'splash',
           routes: {
-            'splash':(context) => const SplashScreen(),
+            'splash': (context) => const SplashScreen(),
             '': (context) => const HomePage(),
             'subscribed': (context) => const FavoritesPage(),
             //'history': (context) => const HistoryPage(),

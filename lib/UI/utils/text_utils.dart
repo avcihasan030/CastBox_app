@@ -9,6 +9,8 @@ class TextUtils {
   static String trendingTabTitle = 'TRENDING';
   static String categoryTabTitle = 'CATEGORIES';
   static String networkTabTitle = 'NETWORKS';
+  static String trackTabTitle = 'TRACKS';
+  static String recommendationsTabTitle = 'FOR YOU';
   static String regionTitle = "Region";
   static String selectRegion = "Select Region";
   static String tooltipTitle = "Show Menu";

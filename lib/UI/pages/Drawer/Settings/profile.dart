@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:final_year_project/DATA/Notification/notification_service.dart';
 import 'package:final_year_project/DATA/Profile/user_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,6 +56,10 @@ class _ProfilePageState extends State<ProfilePage> {
       'gender': _genderController.text.trim(),
       //'imageUrl': _imageFile ?? defaultProfilePhotoUrl,
     });
+    await NotificationService.showNotification(
+        title: 'CastBox Profile Setting',
+        body: 'Your profile changes saved successfully!',
+        payload: 'This is a payload message');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Profil güncellendi')),
     );
@@ -265,7 +270,6 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
   }
-
 
   void changeProfilePhotoDialog() async {
     final XFile? pickedFile = await _imagePicker.pickImage(

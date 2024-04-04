@@ -1,14 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_year_project/DATA/Auth/auth_service.dart';
 import 'package:final_year_project/DATA/Chat/chat_service.dart';
+import 'package:final_year_project/DATA/Profile/user_profile_service.dart';
 import 'package:final_year_project/UI/utils/chat_bubble.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatelessWidget {
   final String receiverEmail;
   final String receiverID;
+  //final String receiverFCMToken;
 
-  ChatPage({super.key, required this.receiverEmail, required this.receiverID});
+  ChatPage({
+    super.key,
+    required this.receiverEmail,
+    required this.receiverID,
+    /*required this.receiverFCMToken*/
+  });
 
   /// textController
   final TextEditingController _messageController = TextEditingController();
@@ -16,6 +23,8 @@ class ChatPage extends StatelessWidget {
   /// chat & auth services
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
+ // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final UserProfileService _currentUser = UserProfileService();
 
   /// send message method
   void sendMessage() async {
@@ -24,10 +33,23 @@ class ChatPage extends StatelessWidget {
       await _chatService.sendMessage(
           receiverID, _messageController.text.trim());
 
+      // _sendNotificationToReceiver(
+      //     receiverFCMToken, _messageController.text.trim());
+
       /// clear the text controller
       _messageController.clear();
     }
   }
+
+  // void _sendNotificationToReceiver(
+  //     String receiverFCMToken, String message) async {
+  //   debugPrint("Alıcı kişisine ait FCM Token: $receiverFCMToken");
+  //   final userData = await _currentUser.getUserProfileData();
+  //   await _firebaseMessaging.sendMessage(data: {
+  //     'title': 'New Message from ${userData['name']}',
+  //     'body': message
+  //   },);
+  // }
 
   @override
   Widget build(BuildContext context) {
