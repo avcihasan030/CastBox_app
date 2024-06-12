@@ -37,33 +37,3 @@ class _LikeButtonWidgetState extends ConsumerState<LikeButtonWidget> {
     );
   }
 }
-
-// class LikeButtonWidget extends ConsumerWidget {
-//   final String playlistId;
-//   final bool isFavorite;
-//   const LikeButtonWidget(this.playlistId, this.isFavorite, {super.key});
-//
-//   @override
-//   Widget build(BuildContext context,WidgetRef ref) {
-//       return SizedBox(
-//         height: 50,
-//         width: 50,
-//         child: LikeButton(
-//           isLiked: isFavorite,
-//           size: 28,
-//           circleColor:
-//           const CircleColor(start: Color(0xff00ddff), end: Color(0xff0099cc)),
-//           bubblesColor: const BubblesColor(
-//             dotPrimaryColor: Color(0xff33b5e5),
-//             dotSecondaryColor: Color(0xff0099cc),
-//           ),
-//           onTap: (isLiked) async {
-//             ref
-//                 .read(favoritesProvider.notifier)
-//                 .toggleFavorites(playlistId);
-//             return !isLiked;
-//           },
-//         ),
-//       );
-//   }
-// }

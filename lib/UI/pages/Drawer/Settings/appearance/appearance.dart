@@ -18,30 +18,6 @@ class _AppearanceState extends ConsumerState<Appearance> {
       appBar: AppBar(
         title: const Text('Appearance'),
       ),
-      // body: ListView(
-      //   children: [
-      //     RadioListTile(
-      //       title: const Text('Dark Mode'),
-      //       value: true,
-      //       groupValue: isDarkTheme,
-      //       onChanged: (value) {
-      //         if (value != null && value != isDarkTheme) {
-      //           ref.read(themeProvider.notifier).state = true;
-      //         }
-      //       },
-      //     ),
-      //     RadioListTile(
-      //       title: const Text('Light Mode'),
-      //       value: false,
-      //       groupValue: isDarkTheme,
-      //       onChanged: (value) {
-      //         if (value != null && value != isDarkTheme) {
-      //           ref.read(themeProvider.notifier).state = false;
-      //         }
-      //       },
-      //     ),
-      //   ],
-      // ),
       body: ListTile(
         leading: IconButton(
             icon: Icon(MyApp.themeNotifier.value == ThemeMode.light

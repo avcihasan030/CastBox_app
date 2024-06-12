@@ -187,48 +187,6 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
-
-  // void showProfilePhotoDialog(dynamic imageFile) {
-  //   if (imageFile is File) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return Dialog(
-  //           child: SizedBox(
-  //             width: 300,
-  //             height: 300,
-  //             child: Hero(
-  //               tag: 'profilePhoto',
-  //               child: Image.file(
-  //                 imageFile,
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     );
-  //   } else if (imageFile is String && imageFile.isNotEmpty) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return Dialog(
-  //           child: SizedBox(
-  //             width: 300,
-  //             height: 300,
-  //             child: Hero(
-  //               tag: 'profilePhoto',
-  //               child: Image.asset(
-  //                 imageFile,
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
   void showProfilePhotoDialog(dynamic imageFile) {
     if (imageFile is File) {
       showDialog(
@@ -293,32 +251,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Widget _displayProfilePhoto(dynamic imageFile) {
-  //   if (imageFile is File) {
-  //     return Hero(
-  //         tag: 'profilePhoto',
-  //         child: CircleAvatar(
-  //           radius: 54,
-  //           backgroundImage: FileImage(imageFile),
-  //         ));
-  //   } else if (imageFile is String && imageFile.isNotEmpty) {
-  //     return Hero(
-  //       tag: 'profilePhoto',
-  //       child: CircleAvatar(
-  //         radius: 54,
-  //         backgroundImage: AssetImage(imageFile),
-  //       ),
-  //     );
-  //   } else {
-  //     return Hero(
-  //       tag: 'profilePhoto',
-  //       child: CircleAvatar(
-  //         radius: 54,
-  //         backgroundImage: defaultProfilePhotoUrl,
-  //       ),
-  //     );
-  //   }
-  // }
   Widget _displayProfilePhoto(dynamic imageFile) {
     if (imageFile is File) {
       return Hero(

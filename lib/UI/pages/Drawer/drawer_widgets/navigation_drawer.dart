@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:final_year_project/DATA/Auth/auth_service.dart';
-import 'package:final_year_project/DATA/Dataset/firestore_to_csv.dart';
 import 'package:final_year_project/DATA/Profile/user_profile_service.dart';
 import 'package:final_year_project/UI/utils/text_utils.dart';
 import 'package:flutter/material.dart';
@@ -117,15 +116,15 @@ class _NavigationDrawerWidgetState
                     onTap: () => signOut(context),
                     hoverColor: Colors.green.shade100.withOpacity(0.5),
                   ),
-                  TextButton(
-                      onPressed: () {
-                        try {
-                          exportFirestoreDataToCsv();
-                        } catch (e) {
-                          throw Exception("Failed to generate csv file: $e");
-                        }
-                      },
-                      child: const Text("Generate CSV File")),
+                  // TextButton(
+                  //     onPressed: () {
+                  //       try {
+                  //         exportFirestoreDataToCsv();
+                  //       } catch (e) {
+                  //         throw Exception("Failed to generate csv file: $e");
+                  //       }
+                  //     },
+                  //     child: const Text("Generate CSV File")),
                 ],
               ),
             ),
@@ -135,28 +134,6 @@ class _NavigationDrawerWidgetState
     );
   }
 
-  // Widget _buildProfileImage() {
-  //   if (profileImage is File) {
-  //     return Container(
-  //       width: 48,
-  //       height: 48,
-  //       child: ClipOval(
-  //         child: Image.file(profileImage, fit: BoxFit.cover),
-  //       ),
-  //     );
-  //   } else if (profileImage is String && profileImage.isNotEmpty) {
-  //     return Container(
-  //       width: 48,
-  //       height: 48,
-  //       child: ClipOval(
-  //         child: Image.network(profileImage, fit: BoxFit.cover),
-  //       ),
-  //     );
-  //   } else {
-  //     // Varsayılan profil fotoğrafı
-  //     return const Icon(Icons.account_circle, size: 48);
-  //   }
-  // }
   Widget _buildProfileImage() {
     if (profileImage is File) {
       // Dosya yolu URI'ye dönüştürülüyor
@@ -187,37 +164,6 @@ class _NavigationDrawerWidgetState
       return const Icon(Icons.account_circle, size: 48);
     }
   }
-
-  // Widget _buildProfileImage() {
-  //   if (profileImage is File) {
-  //     // Dosya yolu URI'ye dönüştürülüyor
-  //     final fileUri = profileImage!.uri;
-  //     // Dosya yolu geçerli mi diye kontrol ediliyor
-  //     if (fileUri != null) {
-  //       return Container(
-  //         width: 48,
-  //         height: 48,
-  //         child: ClipOval(
-  //           child: Image.file(profileImage!, fit: BoxFit.cover),
-  //         ),
-  //       );
-  //     } else {
-  //       // Dosya yolu geçersiz ise varsayılan ikon gösteriliyor
-  //       return const Icon(Icons.account_circle, size: 48);
-  //     }
-  //   } else if (profileImage is String && profileImage.isNotEmpty) {
-  //     return Container(
-  //       width: 48,
-  //       height: 48,
-  //       child: ClipOval(
-  //         child: Image.asset(profileImage, fit: BoxFit.cover),
-  //       ),
-  //     );
-  //   } else {
-  //     // Varsayılan profil fotoğrafı
-  //     return const Icon(Icons.account_circle, size: 48);
-  //   }
-  // }
 
   void _navigateTo(BuildContext context, String route) {
     //Navigator.pop(context);

@@ -1,5 +1,6 @@
 import 'package:final_year_project/DATA/State_Management/database_providers/database_providers.dart';
 import 'package:final_year_project/DATA/State_Management/widget_providers/favorites_provider.dart';
+import 'package:final_year_project/UI/pages/Tracks/track_play_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,7 +37,6 @@ class FeaturedFavorites extends ConsumerWidget {
                             children: [
                               SizedBox(
                                 child: Image.asset(
-                                  //imageUrl: playlist.images.first.url,
                                   'images/coverimage.jpeg',
                                   fit: BoxFit.fill,
                                   width: 150,
@@ -80,12 +80,19 @@ class FeaturedFavorites extends ConsumerWidget {
                             ],
                           ),
                           onTap: () {
-                            // debugPrint("${playlist.description} clicked!");
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //   builder: (context) => PlaylistDetailsPage(
-                            //       playlistItem: playlist,
-                            //       isFavorite: playlist.isFavorite),
-                            // ));
+                            final favs = ref.watch(favoritesProvider);
+                            bool isFavorite;
+                            if (favs.contains(playlist.id)) {
+                              isFavorite = true;
+                            } else {
+                              isFavorite = false;
+                            }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PlayTrackPage(playlist, isFavorite),
+                                ));
                           },
                         ),
                       ),

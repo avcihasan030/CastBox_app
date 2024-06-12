@@ -20,7 +20,7 @@ final favoritesPageControllerProvider = Provider<PageController>((ref) {
 final favoritePagesProvider = Provider<List<Widget>>((ref) {
   return [
     const FeaturedFavorites(),
-    Recommendations(),
+    const Recommendations(),
   ];
 });
 
@@ -30,6 +30,7 @@ class FavoritesNotifier extends StateNotifier<Set<String>> {
   void toggleFavorites(String playlistId) {
     if (state.contains(playlistId)) {
       state = Set.from(state)..remove(playlistId);
+
     } else {
       state = Set.from(state)..add(playlistId);
     }
