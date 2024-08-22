@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 class SpotifyApiClient {
-  final String clientId = '655ce5da86534d18a90eccbbb36e4fda';
-  final String clientSecret = 'b7e1d830062946558f1c2ddf9cabcb4a';
+  final String clientId = 'YOUR_CLIENT_ID';
+  final String clientSecret = 'YOUR_CLIENT_SECRET';
   final String tokenUrl = 'https://accounts.spotify.com/api/token';
 
   final Dio dio = Dio();
