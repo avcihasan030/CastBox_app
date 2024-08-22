@@ -1,4 +1,4 @@
-# final_year_project
+# flutter mobile app project
 
 A new Flutter project.
 
